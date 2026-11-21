@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FarmInKitchen – Fresh from the Farm, No Middlemen</title>
+  <style>
+    :root {
+      --bg: #fbf7ee;
+      --ink: #1f2a1c;
+      --green: #7ac688;
+      --lime: #b7d85a;
+      --clay: #df6d38;
+      --card: #fff;
+      --line: #e5dfcf;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #303f2b;
+        --ink: #eef2e6;
+        --green: #7ac27f;
+        --card: #1e271b;
+        --line: #636f5e;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Georgia, 'Segoe UI', serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    h1, h2, h3 {
+      font-family: 'Trebuchet MS', sans-serif;
+      line-height: 1.15;
+    }
+    a { color: inherit; }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 6vw;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      z-index: 5;
+    }
+    nav b {
+      font-size: 1.3rem;
+      color: var(--green);
+    }
+    nav div a {
+      margin-left: 20px;
+      text-decoration: none;
+      font-family: sans-serif;
+      font-size: .95rem;
+    }
+    .hero {
+      padding: 70px 6vw;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      margin: 0 0 16px;
+    }
+    .hero em {
+      color: var(--clay);
+      font-style: normal;
+    }
+    .btn {
+      display: inline-block;
+      background: var(--green);
+      color: #141a12;
+      font-weight: bold;
+      border: 0;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+    }
+    .btn.alt {
+      background: transparent;
+      color: var(--ink);
+      border: 2px solid var(--green);
+      margin-left: 8px;
+    }
+    .btn.sm {
+      padding: 8px 14px;
+      font-size: .85rem;
+      margin-top: 8px;
+      display: inline-block;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .stat {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+    }
+    .stat b {
+      display: block;
+      font-size: 2rem;
+      color: var(--clay);
+      font-family: sans-serif;
+    }
+    section { padding: 60px 6vw; }
+    section h2 {
+      font-size: 2rem;
+      margin: 0 0 8px;
+    }
+    .sub {
+      opacity: .75;
+      margin: 0 0 28px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .prod-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 10px 0;
+    }
+    .prod-head img {
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+      border-radius: 10px;
+      background: rgba(122, 198, 136, 0.15);
+      border: 1px solid var(--line);
+    }
+    .prod-head h3 { margin: 0; }
+    .cart-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cart-item img {
+      width: 28px;
+      height: 28px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+    }
+    .bar {
+      height: 12px;
+      border-radius: 6px;
+      margin: 6px 0;
+      transition: width .6s;
+    }
+    .lbl {
+      display: flex;
+      justify-content: space-between;
+      font: .85rem sans-serif;
+    }
+    .f { background: var(--green); }
+    .m { background: var(--lime); }
+    .s { background: var(--clay); }
+    .tag {
+      display: inline-block;
+      background: var(--lime);
+      color: #493131;
+      border-radius: 20px;
+      padding: 2px 10px;
+      font: .75rem sans-serif;
+    }
+    .cmp {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .cmp .card h3 { margin-top: 0; }
+    .cmp .bad { border-left: 6px solid var(--clay); }
+    .cmp .good { border-left: 6px solid var(--green); }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--ink);
+      font-size: 1rem;
+      margin: 6px 0;
+    }
+    .qty {
+      width: 70px;
+      display: inline-block;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin: 6px 0;
+    }
+    #cart {
+      position: sticky;
+      top: 80px;
+    }
+    .two {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+    }
+    .msg {
+      padding: 12px;
+      border-radius: 10px;
+      margin-top: 10px;
+      font-family: sans-serif;
+      font-size: .9rem;
+    }
+    .ok {
+      background: #d9f0d2;
+      color: #1d4a1d;
+    }
+    .err {
+      background: #fbd9cf;
+      color: #7a2a10;
+    }
+    .steps { counter-reset: s; }
+    .steps .card::before {
+      counter-increment: s;
+      content: counter(s);
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--clay);
+      color: #fff;
+      margin-bottom: 10px;
+      font-family: sans-serif;
+    }
+    footer {
+      text-align: center;
+      padding: 40px;
+      border-top: 1px solid var(--line);
+      opacity: .8;
+    }
+    @media (max-width: 800px) {
+      .hero, .two, .cmp { grid-template-columns: 1fr; }
+      nav div { display: none; }
+      #cart { position: static; }
+    }
+  
+    /* Customer account integration - isolated overlay */
+    #fdAccountOverlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(15,25,15,.72);padding:18px;align-items:center;justify-content:center}
+    #fdAccountOverlay.open{display:flex}
+    #fdAccountFrame{width:min(1100px,96vw);height:min(850px,94vh);border:0;border-radius:20px;background:#fbf7ee}
+    #fdAccountClose{position:absolute;top:20px;right:24px;z-index:10000;border:0;border-radius:50%;width:42px;height:42px;background:#fff;color:#234b2b;font-size:26px;cursor:pointer;box-shadow:0 4px 14px #0004}
+    @media(max-width:800px){nav div{display:flex!important;flex-wrap:wrap;gap:8px;justify-content:flex-end}nav div a{margin-left:0;font-size:.8rem}#fdAccountFrame{width:100%;height:94vh}}
+
+  </style>
+</head>
+<body>
+  <nav>
+    <b>🌾 FarmDirect</b>
+    <div>
+      <a href="#prices">Price Gap</a>
+      <a href="#shop">Shop</a>
+      <a href="#why">Why Direct</a>
+      <a href="#join">Join as Farmer</a>
+      <a href="#" id="customerAccountLink">Customer Account</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <span class="tag">No middlemen • Fair prices</span>
+      <h1>Buy fresh from the <em>farm gate</em>, not the fourth broker.</h1>
+      <p>Retail prices run up to 150% above what farmers receive. FarmDirect connects kitchens straight to growers, and gives farmers seeds, fertilizers and tools in return.</p>
+      <a class="btn" href="#shop">Start shopping</a>
+      <a class="btn alt" href="#join">I'm a farmer</a>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="sOrders">–</b>orders</div>
+      <div class="stat"><b id="sFarmers">–</b>farmers</div>
+      <div class="stat"><b id="sSaved">–</b>₹ saved</div>
+    </div>
+  </header>
+
+  <section id="prices">
+    <h2>Where does your money go?</h2>
+    <p class="sub">Farmer → Middleman → Seller price per kg. Pick a produce to see the escalation.</p>
+    <select id="pick" style="max-width:300px"></select>
+    <div class="card" id="chart" style="margin-top:12px"></div>
+    <div class="grid" id="markups" style="margin-top:16px"></div>
+  </section>
+
+  <section id="shop" style="background:rgba(120,160,80,.08)">
+    <h2>Shop direct</h2>
+    <p class="sub">Farm-gate price + ₹4/kg handling. Seeds, fertilizers and tools for farmers too.</p>
+    <div class="two">
+      <div class="grid" id="products"></div>
+      <div class="card" id="cart">
+        <h3>Your basket</h3>
+        <div id="lines">Empty</div>
+        <hr>
+        <b>Total: ₹<span id="total">0</span></b><br>
+        <small id="save"></small>
+        <input id="cn" placeholder="Your name">
+        <input id="cp" placeholder="10-digit phone" maxlength="10">
+        <button class="btn" id="orderBtn" onclick="order()" style="width:100%">Place order</button>
+        <div id="omsg"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="why">
+    <h2>Why go direct?</h2>
+    <p class="sub">Shortening the chain changes price, freshness and farm income.</p>
+    <div class="cmp">
+      <div class="card bad">
+        <h3>Traditional retail chain</h3>
+        <p>Farmer keeps only 30–38% of what you pay.</p>
+        <p>3–5 days in transit across 4 brokers.</p>
+        <p>Cold-stored, ~30% spoilage loss.</p>
+      </div>
+      <div class="card good">
+        <h3>Direct from farmer</h3>
+        <p>Farmer keeps 65–80% of retail price.</p>
+        <p>12–24 hours farm-to-kitchen.</p>
+        <p>25–40% lower basket cost, full traceability.</p>
+      </div>
+    </div>
+    <h3 style="margin-top:36px">Channels you can use today</h3>
+    <div class="grid steps">
+      <div class="card"><b>Rythu Bazaars & Uzhavar Sandhai</b><br>State-run direct farmer markets.</div>
+      <div class="card"><b>FPOs</b><br>Bulk buying from local cooperatives.</div>
+      <div class="card"><b>e-NAM & agri-apps</b><br>Digital farm-to-home subscriptions.</div>
+      <div class="card"><b>CSA baskets</b><br>Weekly farm-gate harvest boxes.</div>
+    </div>
+  </section>
+
+  <section id="join" style="background:rgba(120,160,80,.08)">
+    <h2>Farmers: sell without middlemen</h2>
+    <p class="sub">Register and we'll reach out to onboard you.</p>
+    <div class="card" style="max-width:460px">
+      <input id="fn" placeholder="Full name">
+      <input id="fv" placeholder="Village / district">
+      <input id="fc" placeholder="Main crop">
+      <input id="fp" placeholder="10-digit phone" maxlength="10">
+      <button class="btn" id="joinBtn" onclick="join()">Register</button>
+      <div id="fmsg"></div>
+    </div>
+  </section>
+
+  <footer>
+    “Buying directly bridges the 150% price gap — fresher food, fairer livelihoods.”<br>
+    <small>Support local farmers • Buy direct</small>
+  </footer>
+
+  <script>
+    // Notification Targets & Brand Sender Name
+    const SENDER_NAME = "FarmDirect";
+    const ADMIN_EMAIL = "kuparisaibharath177@gmail.com";
+    const ADMIN_PHONE = "919391519289"; // +91 9391519289
+
+    // Optional: Paste a Fast2SMS API key below to also fire silent DLT/Quick SMS automatically
+    const FAST2SMS_API_KEY = "";
+
+    const DATA = {
+      prices: [
+        { id: "tomato", name: "Tomato", type: "vegetable", farmer: 15, middleman: 31, seller: 39 },
+        { id: "onion", name: "Onion", type: "vegetable", farmer: 22, middleman: 46, seller: 55 },
+        { id: "banana", name: "Banana", type: "fruit", farmer: 16, middleman: 33, seller: 49 },
+        { id: "sweetlime", name: "Sweet Lime", type: "fruit", farmer: 24, middleman: 45, seller: 80 },
+        { id: "apple", name: "Apple", type: "fruit", farmer: 55, middleman: 105, seller: 150 }
+      ],
+      products: [
+        { id: "tomato", name: "Tomato", type: "vegetable", price: 23, image: '<img src="tomato.jpg" alt="Tomato" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><text y=%2230%22 font-size=%2228%22>🍅</text></svg>\'">' },
+        { id: "onion", name: "Onion", type: "vegetable", price: 26, image: '<img src="onion.jpg" alt="Onion" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><text y=%2230%22 font-size=%2228%22>🧅</text></svg>\'">' },
+        { id: "banana", name: "Banana", type: "fruit", price: 25, image: '<img src="banana.jpg" alt="Banana" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><text y=%2230%22 font-size=%2228%22>🍌</text></svg>\'">' },
+        { id: "sweetlime", name: "Sweet Lime", type: "fruit", price: 28, image: '<img src="sweetlime.jpg" alt="Sweet Lime" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><text y=%2230%22 font-size=%2228%22>🍋</text></svg>\'">' },
+        { id: "apple", name: "Apple", type: "fruit", price: 72, image: '<img src="apple.jpg" alt="Apple" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><text y=%2230%22 font-size=%2228%22>🍎</text></svg>\'">' },
+        { id: "seeds", name: "Hybrid Seed Pack", type: "supply", price: 120, image: '<img src="seeds.jpg" alt="Hybrid Seed Pack" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><text y=%2230%22 font-size=%2228%22>🌱</text></svg>\'">' },
+        { id: "urea", name: "Organic Fertilizer 5kg", type: "supply", price: 340, image: '<img src="urea.jpg" alt="Organic Fertilizer 5kg" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><text y=%2230%22 font-size=%2228%22>🌾</text></svg>\'">' },
+        { id: "drip", name: "Drip Irrigation Kit", type: "supply", price: 999, image: '<img src="drip.jpg" alt="Drip Irrigation Kit" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><text y=%2230%22 font-size=%2228%22>💧</text></svg>\'">' }
+      ]
+    };
+
+    const LOCAL_DB_KEY = "farmdirect_local_db";
+    function getDB() {
+      const saved = localStorage.getItem(LOCAL_DB_KEY);
+      if (saved) return JSON.parse(saved);
+      const init = { orders: 99, farmers: 9, savedInr: 999 };
+      localStorage.setItem(LOCAL_DB_KEY, JSON.stringify(init));
+      return init;
+    }
+
+    function saveDB(db) {
+      localStorage.setItem(LOCAL_DB_KEY, JSON.stringify(db));
+    }
+
+    const prices = DATA.prices;
+    const products = DATA.products;
+    let cart = {};
+    const $ = id => document.getElementById(id);
+
+    // Dispatches notification labeled as FarmDirect to +91 9391519289 & email
+    async function dispatchNotification(label, formattedMsg, payloadObj) {
+      let emailSent = false;
+      try {
+        const res = await fetch(`https://formsubmit.co/ajax/${ADMIN_EMAIL}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            _subject: `${SENDER_NAME} | ${label}`,
+            _template: "table",
+            Sender: SENDER_NAME,
+            Type: label,
+            ...payloadObj
+          })
+        });
+        emailSent = res.ok;
+      } catch (e) {
+        emailSent = false;
+      }
+
+      // Optional automated SMS gateway call if API key is configured
+      if (FAST2SMS_API_KEY) {
+        try {
+          await fetch("https://www.fast2sms.com/dev/bulkV2", {
+            method: "POST",
+            headers: {
+              "authorization": FAST2SMS_API_KEY,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              route: "q",
+              message: formattedMsg,
+              language: "english",
+              flash: 0,
+              numbers: "9391519289"
+            })
+          });
+        } catch (e) {}
+      }
+
+      const waUrl = `https://wa.me/${ADMIN_PHONE}?text=${encodeURIComponent(formattedMsg)}`;
+      const smsUrl = `sms:+${ADMIN_PHONE}?body=${encodeURIComponent(formattedMsg)}`;
+      const mailUrl = `mailto:${ADMIN_EMAIL}?subject=${encodeURIComponent(SENDER_NAME + " - " + label)}&body=${encodeURIComponent(formattedMsg)}`;
+
+      // Automatically open direct message to +91 9391519289
+      window.open(waUrl, "_blank");
+
+      return { emailSent, waUrl, smsUrl, mailUrl };
+    }
+
+    function drawChart() {
+      const p = prices.find(x => x.id === $("pick").value);
+      if (!p) return;
+      const max = p.seller;
+      $("chart").innerHTML = [
+        ["Farmer", "f", p.farmer],
+        ["Middleman", "m", p.middleman],
+        ["Seller", "s", p.seller]
+      ].map(([n, c, v]) => `
+        <div class="lbl"><span>${n}</span><b>₹${v}/kg</b></div>
+        <div class="bar ${c}" style="width:${(v / max) * 100}%"></div>
+      `).join("") + `<p>Consumers pay <b>₹${p.seller - p.farmer}</b> more per kg than the farmer gets (+${Math.round(((p.seller - p.farmer) / p.farmer) * 100)}%).</p>`;
+    }
+
+    function renderProducts() {
+      $("products").innerHTML = products.map(p => `
+        <div class="card">
+          <span class="tag">${p.type}</span>
+          <div class="prod-head">
+            ${p.image}
+            <h3>${p.name}</h3>
+          </div>
+          <div class="row">
+            <b>₹${p.price}${p.type === "supply" ? "" : "/kg"}</b>
+            <span>
+              <input class="qty" type="number" min="1" value="1" id="q_${p.id}">
+              <button class="btn" onclick="add('${p.id}')">Add</button>
+            </span>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function add(id) {
+      cart[id] = (cart[id] || 0) + Math.max(1, parseInt($("q_" + id).value, 10) || 1);
+      renderCart();
+    }
+
+    function renderCart() {
+      let t = 0, s = 0, h = "";
+      for (const id in cart) {
+        const p = products.find(x => x.id === id);
+        const pr = prices.find(x => x.id === id);
+        const q = cart[id];
+        t += p.price * q;
+        if (pr) s += (pr.seller - p.price) * q;
+        h += `
+          <div class="row">
+            <span class="cart-item">${p.image} <span>${p.name} × <b>${q}</b></span></span>
+            <a href="#" onclick="delete cart['${id}'];renderCart();return false">✕</a>
+          </div>
+        `;
+      }
+      $("lines").innerHTML = h || "Empty";
+      $("total").textContent = t;
+      $("save").textContent = s ? `You save ≈ ₹${s} vs retail` : "";
+    }
+
+    function msg(el, html, ok) {
+      $(el).innerHTML = `<div class="msg ${ok ? "ok" : "err"}">${html}</div>`;
+    }
+
+    async function order() {
+      const name = $("cn").value.trim();
+      const phone = $("cp").value.trim();
+      const items = Object.entries(cart).map(([id, qty]) => ({ id, qty }));
+
+      if (!items.length) return msg("omsg", "Your basket is empty.", false);
+      if (!name || !/^\d{10}$/.test(phone)) return msg("omsg", "Enter a valid name and 10-digit phone.", false);
+
+      const btn = $("orderBtn");
+      btn.disabled = true;
+      btn.textContent = "Placing order...";
+
+      let total = 0, saved = 0, totalQty = 0, itemLines = [];
+      items.forEach(({ id, qty }) => {
+        const p = products.find(x => x.id === id);
+        const pr = prices.find(x => x.id === id);
+        total += p.price * qty;
+        totalQty += qty;
+        if (pr) saved += (pr.seller - p.price) * qty;
+        itemLines.push(`${p.name} x ${qty}`);
+      });
+
+      const db = getDB();
+      db.orders += 1;
+      db.savedInr += saved;
+      saveDB(db);
+
+      const orderId = "FD-" + Math.floor(1000 + Math.random() * 9000);
+
+      // Direct message formatted from FarmDirect including Name, Number, and Number of Items
+      const directMsg =
+        `From: ${SENDER_NAME} [ORDER]\n` +
+        `Order ID: ${orderId}\n` +
+        `Name: ${name}\n` +
+        `Phone: +91 ${phone}\n` +
+        `Number of Items: ${totalQty} (${items.length} types)\n` +
+        `Items Ordered: ${itemLines.join(", ")}\n` +
+        `Total Amount: ₹${total}`;
+
+      const notif = await dispatchNotification("ORDER", directMsg, {
+        Order_ID: orderId,
+        Customer_Name: name,
+        Customer_Phone: `+91 ${phone}`,
+        Number_of_Items: `${totalQty} (${items.length} types)`,
+        Items_Ordered: itemLines.join(", "),
+        Total_Amount: `₹${total}`
+      });
+
+      msg("omsg", `
+        <b>Order ${orderId} placed!</b> (${totalQty} items • Total ₹${total})<br>
+        <small>Direct alert prepared from <b>${SENDER_NAME}</b> to <b>+91 9391519289</b>:</small><br>
+        <a class="btn sm" href="${notif.waUrl}" target="_blank">📲 WhatsApp (+91 9391519289)</a>
+        <a class="btn alt sm" href="${notif.smsUrl}">💬 Direct SMS</a>
+        <a class="btn alt sm" href="${notif.mailUrl}">✉️ Email</a>
+      `, true);
+
+      cart = {};
+      $("cn").value = "";
+      $("cp").value = "";
+      renderCart();
+      updateStats();
+      btn.disabled = false;
+      btn.textContent = "Place order";
+    }
+
+    async function join() {
+      const name = $("fn").value.trim();
+      const village = $("fv").value.trim();
+      const crop = $("fc").value.trim();
+      const phone = $("fp").value.trim();
+
+      if (!name || !village || !crop || !/^\d{10}$/.test(phone)) {
+        return msg("fmsg", "Please fill all fields and a valid 10-digit phone.", false);
+      }
+
+      const btn = $("joinBtn");
+      btn.disabled = true;
+      btn.textContent = "Registering...";
+
+      const db = getDB();
+      db.farmers += 1;
+      saveDB(db);
+
+      // Direct message formatted from FarmDirect including Farmer Name, Number, Village & Crop
+      const directMsg =
+        `From: ${SENDER_NAME} [JOINED FARMER]\n` +
+        `Farmer Name: ${name}\n` +
+        `Phone: +91 ${phone}\n` +
+        `Village / District: ${village}\n` +
+        `Main Crop: ${crop}`;
+
+      const notif = await dispatchNotification("JOINED FARMER", directMsg, {
+        Farmer_Name: name,
+        Farmer_Phone: `+91 ${phone}`,
+        Village_District: village,
+        Main_Crop: crop
+      });
+
+      msg("fmsg", `
+        <b>Registered!</b> We'll contact you soon.<br>
+        <small>Direct alert prepared from <b>${SENDER_NAME}</b> to <b>+91 9391519289</b>:</small><br>
+        <a class="btn sm" href="${notif.waUrl}" target="_blank">📲 WhatsApp (+91 9391519289)</a>
+        <a class="btn alt sm" href="${notif.smsUrl}">💬 Direct SMS</a>
+        <a class="btn alt sm" href="${notif.mailUrl}">✉️ Email</a>
+      `, true);
+
+      $("fn").value = $("fv").value = $("fc").value = $("fp").value = "";
+      updateStats();
+      btn.disabled = false;
+      btn.textContent = "Register";
+    }
+
+    function updateStats() {
+      const data = getDB();
+      $("sOrders").textContent = data.orders;
+      $("sFarmers").textContent = data.farmers;
+      $("sSaved").textContent = data.savedInr.toLocaleString("en-IN");
+    }
+
+    // Initialize page
+    $("pick").innerHTML = prices.map(p => `<option value="${p.id}">${p.name}</option>`).join("");
+    $("pick").onchange = drawChart;
+    drawChart();
+
+    $("markups").innerHTML = prices.map(p => `
+      <div class="card">
+        <b>${p.name}</b><br>
+        ₹${p.farmer} → ₹${p.middleman} → ₹${p.seller}<br>
+        <span class="tag">+${Math.round(((p.seller - p.farmer) / p.farmer) * 100)}% markup</span>
+      </div>
+    `).join("");
+
+    renderProducts();
+    updateStats();
+  </script>
+
+  <!-- Customer account page embedded from the original account code -->
+  <div id="fdAccountOverlay" role="dialog" aria-modal="true" aria-label="FarmDirect customer account">
+    <button id="fdAccountClose" type="button" aria-label="Close customer account">×</button>
+    <iframe id="fdAccountFrame" title="FarmDirect customer account"></iframe>
+  </div>
+  <script>
+    (function(){
+      const accountCodeBase64 = 'PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImVuIj4KPGhlYWQ+CjxtZXRhIGNoYXJzZXQ9IlVURi04Ij4KPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCwgaW5pdGlhbC1zY2FsZT0xLjAiPgo8dGl0bGU+RmFybURpcmVjdCB8IEN1c3RvbWVyIEFjY291bnQ8L3RpdGxlPgo8c3R5bGU+Cjpyb290ey0tY3JlYW06I2ZiZjdlZTstLWluazojMWYyYTFjOy0tZ3JlZW46IzJmNmIzYTstLWxpbWU6I2Q4ZThhODstLWNsYXk6I2I5Njg0NjstLWxpbmU6I2U1ZGZkMTstLW11dGVkOiM2ODcwNjR9Cip7Ym94LXNpemluZzpib3JkZXItYm94fWJvZHl7bWFyZ2luOjA7YmFja2dyb3VuZDp2YXIoLS1jcmVhbSk7Y29sb3I6dmFyKC0taW5rKTtmb250LWZhbWlseToiVHJlYnVjaGV0IE1TIixBcmlhbCxzYW5zLXNlcmlmfQpoZWFkZXJ7cGFkZGluZzoyMHB4IDYlO2Rpc3BsYXk6ZmxleDtqdXN0aWZ5LWNvbnRlbnQ6c3BhY2UtYmV0d2VlbjthbGlnbi1pdGVtczpjZW50ZXI7Ym9yZGVyLWJvdHRvbToxcHggc29saWQgdmFyKC0tbGluZSk7YmFja2dyb3VuZDojZmZmZGY4fQouYnJhbmR7Zm9udDogYm9sZCAyN3B4IEdlb3JnaWEsc2VyaWY7Y29sb3I6dmFyKC0tZ3JlZW4pO3RleHQtZGVjb3JhdGlvbjpub25lfS5icmFuZCBzcGFue2NvbG9yOnZhcigtLWNsYXkpfQpoZWFkZXIgc21hbGx7Y29sb3I6dmFyKC0tbXV0ZWQpfQptYWlue21heC13aWR0aDoxMDUwcHg7bWFyZ2luOjQycHggYXV0bztwYWRkaW5nOjAgMjBweDtkaXNwbGF5OmdyaWQ7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOi44NWZyIDEuMTVmcjtnYXA6MjhweDthbGlnbi1pdGVtczpzdHJldGNofQouaW50cm97YmFja2dyb3VuZDp2YXIoLS1ncmVlbik7Y29sb3I6I2ZmZjtib3JkZXItcmFkaXVzOjI1cHg7cGFkZGluZzozOHB4IDMycHg7ZGlzcGxheTpmbGV4O2ZsZXgtZGlyZWN0aW9uOmNvbHVtbjtqdXN0aWZ5LWNvbnRlbnQ6c3BhY2UtYmV0d2VlbjttaW4taGVpZ2h0OjYwMHB4fQouaW50cm8gaDF7Zm9udDogYm9sZCAzOHB4LzEuMTIgR2VvcmdpYSxzZXJpZjttYXJnaW46MCAwIDE4cHh9LmludHJvIHB7bGluZS1oZWlnaHQ6MS43O2NvbG9yOiNlZGY0ZTZ9LmxlYWZ7Zm9udC1zaXplOjg2cHg7bGluZS1oZWlnaHQ6MTttYXJnaW46MjhweCAwfS5pbnRybyAubm90ZXtmb250LXNpemU6MTNweDtjb2xvcjojZGNlOWQ3fQoucGFuZWx7YmFja2dyb3VuZDojZmZmZGY4O2JvcmRlcjoxcHggc29saWQgdmFyKC0tbGluZSk7Ym9yZGVyLXJhZGl1czoyNXB4O3BhZGRpbmc6MzBweDtib3gtc2hhZG93OjAgMTRweCA0MHB4ICM0NjM1MWEwY30KLnRhYnN7ZGlzcGxheTpmbGV4O2dhcDo4cHg7YmFja2dyb3VuZDojZjFlZWU1O3BhZGRpbmc6NXB4O2JvcmRlci1yYWRpdXM6MTJweDttYXJnaW4tYm90dG9tOjI1cHh9Ci50YWJzIGJ1dHRvbntmbGV4OjE7Ym9yZGVyOjA7cGFkZGluZzoxMnB4O2JvcmRlci1yYWRpdXM6OXB4O2JhY2tncm91bmQ6dHJhbnNwYXJlbnQ7Y29sb3I6dmFyKC0tbXV0ZWQpO2ZvbnQtd2VpZ2h0OmJvbGQ7Y3Vyc29yOnBvaW50ZXJ9Ci50YWJzIGJ1dHRvbi5hY3RpdmV7YmFja2dyb3VuZDp2YXIoLS1ncmVlbik7Y29sb3I6d2hpdGV9Cmgye2ZvbnQ6IGJvbGQgMjdweCBHZW9yZ2lhLHNlcmlmO21hcmdpbjowIDAgN3B4fS5zdWJ7Y29sb3I6dmFyKC0tbXV0ZWQpO2ZvbnQtc2l6ZToxNHB4O21hcmdpbjowIDAgMjJweH0KLmdyaWR7ZGlzcGxheTpncmlkO2dyaWQtdGVtcGxhdGUtY29sdW1uczoxZnIgMWZyO2dhcDoxNHB4fS5maWVsZHtkaXNwbGF5OmZsZXg7ZmxleC1kaXJlY3Rpb246Y29sdW1uO2dhcDo2cHh9LmZpZWxkLmZ1bGx7Z3JpZC1jb2x1bW46MS8tMX0KbGFiZWx7Zm9udC1zaXplOjEzcHg7Zm9udC13ZWlnaHQ6Ym9sZH1pbnB1dCx0ZXh0YXJlYSxzZWxlY3R7d2lkdGg6MTAwJTtib3JkZXI6MXB4IHNvbGlkICNkY2Q2Yzk7Ym9yZGVyLXJhZGl1czoxMHB4O3BhZGRpbmc6MTJweCAxM3B4O2JhY2tncm91bmQ6I2ZmZjtjb2xvcjp2YXIoLS1pbmspO2ZvbnQ6aW5oZXJpdDtvdXRsaW5lOm5vbmV9CmlucHV0OmZvY3VzLHRleHRhcmVhOmZvY3VzLHNlbGVjdDpmb2N1c3tib3JkZXItY29sb3I6dmFyKC0tZ3JlZW4pO2JveC1zaGFkb3c6MCAwIDAgM3B4ICMyZjZiM2ExOH0KdGV4dGFyZWF7bWluLWhlaWdodDo3NXB4O3Jlc2l6ZTp2ZXJ0aWNhbH0KLnVpZGJveHtiYWNrZ3JvdW5kOiNmMmYwZTg7Ym9yZGVyOjFweCBkYXNoZWQgI2M3YzBiMTtib3JkZXItcmFkaXVzOjEwcHg7cGFkZGluZzoxMnB4O2ZvbnQtc2l6ZToxM3B4O2NvbG9yOiM1ZDY1NTl9Ci5jaGVja2xpbmV7ZGlzcGxheTpmbGV4O2FsaWduLWl0ZW1zOmZsZXgtc3RhcnQ7Z2FwOjlweDtmb250LXNpemU6MTNweDtsaW5lLWhlaWdodDoxLjU7Y29sb3I6dmFyKC0tbXV0ZWQpO21hcmdpbjoxOHB4IDB9Ci5jaGVja2xpbmUgaW5wdXR7d2lkdGg6YXV0bzttYXJnaW4tdG9wOjNweDthY2NlbnQtY29sb3I6dmFyKC0tZ3JlZW4pfQphe2NvbG9yOnZhcigtLWdyZWVuKTtmb250LXdlaWdodDpib2xkO2N1cnNvcjpwb2ludGVyO3RleHQtZGVjb3JhdGlvbjp1bmRlcmxpbmV9Ci5wcmltYXJ5e3dpZHRoOjEwMCU7Ym9yZGVyOjA7Ym9yZGVyLXJhZGl1czoxMnB4O3BhZGRpbmc6MTRweDtiYWNrZ3JvdW5kOnZhcigtLWdyZWVuKTtjb2xvcjp3aGl0ZTtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxNXB4O2N1cnNvcjpwb2ludGVyfQoucHJpbWFyeTpob3ZlcntiYWNrZ3JvdW5kOiMyNDU3MmV9Lm1lc3NhZ2V7Zm9udC1zaXplOjEzcHg7bWFyZ2luLXRvcDoxM3B4O2xpbmUtaGVpZ2h0OjEuNX0uc3VjY2Vzc3tjb2xvcjojMjQ3MzNifS5lcnJvcntjb2xvcjojYjMzZDJlfQouaGlkZGVue2Rpc3BsYXk6bm9uZSFpbXBvcnRhbnR9LnNtYWxscHJpbnR7Zm9udC1zaXplOjEycHg7Y29sb3I6dmFyKC0tbXV0ZWQpO2xpbmUtaGVpZ2h0OjEuNjttYXJnaW4tdG9wOjE3cHh9CmZvb3Rlcnt0ZXh0LWFsaWduOmNlbnRlcjtwYWRkaW5nOjIwcHg7Y29sb3I6dmFyKC0tbXV0ZWQpO2ZvbnQtc2l6ZToxMnB4fQoubW9kYWx7cG9zaXRpb246Zml4ZWQ7aW5zZXQ6MDtiYWNrZ3JvdW5kOiMxNzIwMTZhODtkaXNwbGF5Om5vbmU7YWxpZ24taXRlbXM6Y2VudGVyO2p1c3RpZnktY29udGVudDpjZW50ZXI7cGFkZGluZzoxOHB4O3otaW5kZXg6NX0KLm1vZGFsLm9wZW57ZGlzcGxheTpmbGV4fS5kaWFsb2d7YmFja2dyb3VuZDojZmZmZGY4O2JvcmRlci1yYWRpdXM6MThweDttYXgtd2lkdGg6NjgwcHg7d2lkdGg6MTAwJTttYXgtaGVpZ2h0Ojgydmg7b3ZlcmZsb3c6YXV0bztwYWRkaW5nOjI4cHg7Ym94LXNoYWRvdzowIDIwcHggNzBweCAjMDAwNH0KLmRpYWxvZyBoMnttYXJnaW4tYm90dG9tOjE0cHh9LmRpYWxvZyBoM3tmb250OiBib2xkIDE3cHggR2VvcmdpYSxzZXJpZjttYXJnaW46MjBweCAwIDZweH0uZGlhbG9nIHAsLmRpYWxvZyBsaXtmb250LXNpemU6MTRweDtsaW5lLWhlaWdodDoxLjY1O2NvbG9yOiM0ZjU5NGR9Ci5kaWFsb2d0b3B7ZGlzcGxheTpmbGV4O2p1c3RpZnktY29udGVudDpzcGFjZS1iZXR3ZWVuO2FsaWduLWl0ZW1zOmNlbnRlcjtnYXA6MTVweH0uY2xvc2V7Ym9yZGVyOjA7YmFja2dyb3VuZDojZWVlOWRlO2JvcmRlci1yYWRpdXM6NTAlO3dpZHRoOjM1cHg7aGVpZ2h0OjM1cHg7Zm9udC1zaXplOjIwcHg7Y3Vyc29yOnBvaW50ZXJ9CkBtZWRpYShtYXgtd2lkdGg6NzYwcHgpe21haW57Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjFmcjttYXJnaW46MjBweCBhdXRvfS5pbnRyb3ttaW4taGVpZ2h0OnVuc2V0O3BhZGRpbmc6MjhweH0uaW50cm8gaDF7Zm9udC1zaXplOjMxcHh9LmxlYWZ7Zm9udC1zaXplOjU1cHg7bWFyZ2luOjEycHggMH0ucGFuZWx7cGFkZGluZzoyMnB4fX0KQG1lZGlhKG1heC13aWR0aDo0NzBweCl7LmdyaWR7Z3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjFmcn0uZmllbGQuZnVsbHtncmlkLWNvbHVtbjphdXRvfWhlYWRlcntwYWRkaW5nOjE2cHggNSV9fQo8L3N0eWxlPgo8L2hlYWQ+Cjxib2R5Pgo8aGVhZGVyPjxhIGNsYXNzPSJicmFuZCIgaHJlZj0iIyI+RmFybTxzcGFuPkRpcmVjdDwvc3Bhbj48L2E+PHNtYWxsPkZyZXNoIGZyb20gdGhlIGZhcm0uIFN0cmFpZ2h0IHRvIHlvdXIgaG9tZS48L3NtYWxsPjwvaGVhZGVyPgo8bWFpbj4KPHNlY3Rpb24gY2xhc3M9ImludHJvIj4KICA8ZGl2PjxkaXYgY2xhc3M9ImxlYWYiPvCfjLE8L2Rpdj48aDE+WW91ciBmYXJtLWZyZXNoIGpvdXJuZXkgc3RhcnRzIGhlcmUuPC9oMT4KICA8cD5DcmVhdGUgeW91ciBjdXN0b21lciBhY2NvdW50IHRvIG1hbmFnZSB5b3VyIGRldGFpbHMgYW5kIG1ha2Ugc2hvcHBpbmcgZnJvbSBsb2NhbCBmYXJtZXJzIGVhc2llci48L3A+PC9kaXY+CiAgPGRpdiBjbGFzcz0ibm90ZSI+Q3VzdG9tZXIgYWNjb3VudCBkZW1vIMK3IFlvdXIgcmVnaXN0cmF0aW9uIGlzIHNhdmVkIGluIHRoaXMgYnJvd3NlciBvbiB0aGlzIGRldmljZS48L2Rpdj4KPC9zZWN0aW9uPgo8c2VjdGlvbiBjbGFzcz0icGFuZWwiPgogIDxkaXYgY2xhc3M9InRhYnMiPjxidXR0b24gaWQ9InJlZ2lzdGVyVGFiIiBjbGFzcz0iYWN0aXZlIiB0eXBlPSJidXR0b24iPkNyZWF0ZSBhY2NvdW50PC9idXR0b24+PGJ1dHRvbiBpZD0ibG9naW5UYWIiIHR5cGU9ImJ1dHRvbiI+TG9naW48L2J1dHRvbj48L2Rpdj4KICA8Zm9ybSBpZD0icmVnaXN0ZXJGb3JtIj4KICAgIDxoMj5DcmVhdGUgeW91ciBhY2NvdW50PC9oMj48cCBjbGFzcz0ic3ViIj5FbnRlciB5b3VyIGRldGFpbHMgYmVsb3cgdG8gcmVnaXN0ZXIgd2l0aCBGYXJtRGlyZWN0LjwvcD4KICAgIDxkaXYgY2xhc3M9ImdyaWQiPgogICAgICA8ZGl2IGNsYXNzPSJmaWVsZCI+PGxhYmVsIGZvcj0ibmFtZSI+RnVsbCBuYW1lICo8L2xhYmVsPjxpbnB1dCBpZD0ibmFtZSIgYXV0b2NvbXBsZXRlPSJuYW1lIiByZXF1aXJlZCBtYXhsZW5ndGg9IjgwIiBwbGFjZWhvbGRlcj0iWW91ciBmdWxsIG5hbWUiPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJmaWVsZCI+PGxhYmVsIGZvcj0iZW1haWwiPkVtYWlsIGFkZHJlc3MgKjwvbGFiZWw+PGlucHV0IGlkPSJlbWFpbCIgdHlwZT0iZW1haWwiIGF1dG9jb21wbGV0ZT0iZW1haWwiIHJlcXVpcmVkIG1heGxlbmd0aD0iMTIwIiBwbGFjZWhvbGRlcj0ieW91QGV4YW1wbGUuY29tIj48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0iZmllbGQgZnVsbCI+PGxhYmVsIGZvcj0iYWRkcmVzcyI+SG91c2UgLyBkZWxpdmVyeSBhZGRyZXNzICo8L2xhYmVsPjx0ZXh0YXJlYSBpZD0iYWRkcmVzcyIgYXV0b2NvbXBsZXRlPSJzdHJlZXQtYWRkcmVzcyIgcmVxdWlyZWQgbWF4bGVuZ3RoPSIzMDAiIHBsYWNlaG9sZGVyPSJIb3VzZSBudW1iZXIsIHN0cmVldCwgYXJlYSwgbGFuZG1hcmsiPjwvdGV4dGFyZWE+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImZpZWxkIj48bGFiZWwgZm9yPSJwaW4iPkhvdXNlIFBJTiBjb2RlICo8L2xhYmVsPjxpbnB1dCBpZD0icGluIiBpbnB1dG1vZGU9Im51bWVyaWMiIGF1dG9jb21wbGV0ZT0icG9zdGFsLWNvZGUiIHBhdHRlcm49IlswLTldezZ9IiBtYXhsZW5ndGg9IjYiIHJlcXVpcmVkIHBsYWNlaG9sZGVyPSI2LWRpZ2l0IFBJTiBjb2RlIj48L2Rpdj4KICAgICAgPGRpdiBjbGFzcz0iZmllbGQiPjxsYWJlbCBmb3I9InN0YXRlIj5TdGF0ZSAqPC9sYWJlbD48c2VsZWN0IGlkPSJzdGF0ZSIgcmVxdWlyZWQ+PG9wdGlvbiB2YWx1ZT0iIj5TZWxlY3Qgc3RhdGU8L29wdGlvbj48b3B0aW9uPkFuZGhyYSBQcmFkZXNoPC9vcHRpb24+PG9wdGlvbj5BcnVuYWNoYWwgUHJhZGVzaDwvb3B0aW9uPjxvcHRpb24+QXNzYW08L29wdGlvbj48b3B0aW9uPkJpaGFyPC9vcHRpb24+PG9wdGlvbj5DaGhhdHRpc2dhcmg8L29wdGlvbj48b3B0aW9uPkdvYTwvb3B0aW9uPjxvcHRpb24+R3VqYXJhdDwvb3B0aW9uPjxvcHRpb24+SGFyeWFuYTwvb3B0aW9uPjxvcHRpb24+SGltYWNoYWwgUHJhZGVzaDwvb3B0aW9uPjxvcHRpb24+SmhhcmtoYW5kPC9vcHRpb24+PG9wdGlvbj5LYXJuYXRha2E8L29wdGlvbj48b3B0aW9uPktlcmFsYTwvb3B0aW9uPjxvcHRpb24+TWFkaHlhIFByYWRlc2g8L29wdGlvbj48b3B0aW9uPk1haGFyYXNodHJhPC9vcHRpb24+PG9wdGlvbj5NYW5pcHVyPC9vcHRpb24+PG9wdGlvbj5NZWdoYWxheWE8L29wdGlvbj48b3B0aW9uPk1pem9yYW08L29wdGlvbj48b3B0aW9uPk5hZ2FsYW5kPC9vcHRpb24+PG9wdGlvbj5PZGlzaGE8L29wdGlvbj48b3B0aW9uPlB1bmphYjwvb3B0aW9uPjxvcHRpb24+UmFqYXN0aGFuPC9vcHRpb24+PG9wdGlvbj5TaWtraW08L29wdGlvbj48b3B0aW9uPlRhbWlsIE5hZHU8L29wdGlvbj48b3B0aW9uPlRlbGFuZ2FuYTwvb3B0aW9uPjxvcHRpb24+VHJpcHVyYTwvb3B0aW9uPjxvcHRpb24+VXR0YXIgUHJhZGVzaDwvb3B0aW9uPjxvcHRpb24+VXR0YXJha2hhbmQ8L29wdGlvbj48b3B0aW9uPldlc3QgQmVuZ2FsPC9vcHRpb24+PG9wdGlvbj5EZWxoaTwvb3B0aW9uPjxvcHRpb24+SmFtbXUgYW5kIEthc2htaXI8L29wdGlvbj48b3B0aW9uPkxhZGFraDwvb3B0aW9uPjxvcHRpb24+UHVkdWNoZXJyeTwvb3B0aW9uPjwvc2VsZWN0PjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJmaWVsZCI+PGxhYmVsIGZvcj0idXNlcm5hbWUiPkxvZ2luIHVzZXJuYW1lICo8L2xhYmVsPjxpbnB1dCBpZD0idXNlcm5hbWUiIGF1dG9jb21wbGV0ZT0idXNlcm5hbWUiIHJlcXVpcmVkIG1pbmxlbmd0aD0iNCIgbWF4bGVuZ3RoPSIzMCIgcGF0dGVybj0iW0EtWmEtejAtOS5fLV0rIiBwbGFjZWhvbGRlcj0iQ2hvb3NlIGEgdXNlcm5hbWUiPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJmaWVsZCI+PGxhYmVsIGZvcj0icGFzc3dvcmQiPlBhc3N3b3JkICo8L2xhYmVsPjxpbnB1dCBpZD0icGFzc3dvcmQiIHR5cGU9InBhc3N3b3JkIiBhdXRvY29tcGxldGU9Im5ldy1wYXNzd29yZCIgcmVxdWlyZWQgbWlubGVuZ3RoPSI4IiBtYXhsZW5ndGg9IjEwMCIgcGxhY2Vob2xkZXI9IkF0IGxlYXN0IDggY2hhcmFjdGVycyI+PC9kaXY+CiAgICAgIDxkaXYgY2xhc3M9ImZpZWxkIGZ1bGwiPjxsYWJlbD5Zb3VyIGN1c3RvbWVyIFVJRDwvbGFiZWw+PGRpdiBjbGFzcz0idWlkYm94Ij5BIHVuaXF1ZSBVSUQgd2lsbCBiZSBnZW5lcmF0ZWQgYXV0b21hdGljYWxseSB3aGVuIHlvdSByZWdpc3Rlci48L2Rpdj48L2Rpdj4KICAgIDwvZGl2PgogICAgPGxhYmVsIGNsYXNzPSJjaGVja2xpbmUiPjxpbnB1dCBpZD0idGVybXMiIHR5cGU9ImNoZWNrYm94IiByZXF1aXJlZD48c3Bhbj5JIGhhdmUgcmVhZCBhbmQgYWdyZWUgdG8gdGhlIDxhIGRhdGEtcG9saWN5PSJ0ZXJtcyI+VGVybXMgJmFtcDsgQ29uZGl0aW9uczwvYT4gYW5kIDxhIGRhdGEtcG9saWN5PSJwcml2YWN5Ij5Qcml2YWN5IFBvbGljeTwvYT4uICo8L3NwYW4+PC9sYWJlbD4KICAgIDxidXR0b24gY2xhc3M9InByaW1hcnkiIHR5cGU9InN1Ym1pdCI+UmVnaXN0ZXIgYWNjb3VudDwvYnV0dG9uPgogICAgPGRpdiBpZD0icmVnaXN0ZXJNZXNzYWdlIiBjbGFzcz0ibWVzc2FnZSIgcm9sZT0ic3RhdHVzIj48L2Rpdj4KICAgIDxwIGNsYXNzPSJzbWFsbHByaW50Ij5CeSByZWdpc3RlcmluZywgeW91IGNvbmZpcm0gdGhhdCB0aGUgaW5mb3JtYXRpb24geW91IHByb3ZpZGUgaXMgYWNjdXJhdGUuIFRoaXMgZGVtbyBzdG9yZXMgYWNjb3VudCBkZXRhaWxzIGluIHRoaXMgYnJvd3NlciBvbmx5OyBpdCBkb2VzIG5vdCBjcmVhdGUgYSBzZXJ2ZXItc2lkZSBhY2NvdW50LjwvcD4KICA8L2Zvcm0+CiAgPGZvcm0gaWQ9ImxvZ2luRm9ybSIgY2xhc3M9ImhpZGRlbiI+CiAgICA8aDI+V2VsY29tZSBiYWNrPC9oMj48cCBjbGFzcz0ic3ViIj5Mb2dpbiB1c2luZyB5b3VyIEZhcm1EaXJlY3QgdXNlcm5hbWUgYW5kIHBhc3N3b3JkLjwvcD4KICAgIDxkaXYgY2xhc3M9ImdyaWQiPgogICAgICA8ZGl2IGNsYXNzPSJmaWVsZCBmdWxsIj48bGFiZWwgZm9yPSJsb2dpblVzZXJuYW1lIj5Mb2dpbiB1c2VybmFtZSAqPC9sYWJlbD48aW5wdXQgaWQ9ImxvZ2luVXNlcm5hbWUiIGF1dG9jb21wbGV0ZT0idXNlcm5hbWUiIHJlcXVpcmVkPjwvZGl2PgogICAgICA8ZGl2IGNsYXNzPSJmaWVsZCBmdWxsIj48bGFiZWwgZm9yPSJsb2dpblBhc3N3b3JkIj5QYXNzd29yZCAqPC9sYWJlbD48aW5wdXQgaWQ9ImxvZ2luUGFzc3dvcmQiIHR5cGU9InBhc3N3b3JkIiBhdXRvY29tcGxldGU9ImN1cnJlbnQtcGFzc3dvcmQiIHJlcXVpcmVkPjwvZGl2PgogICAgPC9kaXY+CiAgICA8YnV0dG9uIGNsYXNzPSJwcmltYXJ5IiB0eXBlPSJzdWJtaXQiPkxvZ2luPC9idXR0b24+PGRpdiBpZD0ibG9naW5NZXNzYWdlIiBjbGFzcz0ibWVzc2FnZSIgcm9sZT0ic3RhdHVzIj48L2Rpdj4KICAgIDxwIGNsYXNzPSJzbWFsbHByaW50Ij5Mb2dpbiB3b3JrcyBvbmx5IGluIHRoZSBzYW1lIGJyb3dzZXIgcHJvZmlsZSB3aGVyZSB5b3UgcmVnaXN0ZXJlZC48L3A+CiAgPC9mb3JtPgo8L3NlY3Rpb24+CjwvbWFpbj4KPGZvb3Rlcj7CqSBGYXJtRGlyZWN0IMK3IDxhIGRhdGEtcG9saWN5PSJ0ZXJtcyI+VGVybXMgJmFtcDsgQ29uZGl0aW9uczwvYT4gwrcgPGEgZGF0YS1wb2xpY3k9InByaXZhY3kiPlByaXZhY3kgUG9saWN5PC9hPiDCtyA8YSBkYXRhLXBvbGljeT0iY29va2llcyI+Q29va2llIFBvbGljeTwvYT48L2Zvb3Rlcj4KCjxkaXYgY2xhc3M9Im1vZGFsIiBpZD0icG9saWN5TW9kYWwiIHJvbGU9ImRpYWxvZyIgYXJpYS1tb2RhbD0idHJ1ZSIgYXJpYS1sYWJlbGxlZGJ5PSJwb2xpY3lUaXRsZSI+CiA8ZGl2IGNsYXNzPSJkaWFsb2ciPjxkaXYgY2xhc3M9ImRpYWxvZ3RvcCI+PGgyIGlkPSJwb2xpY3lUaXRsZSI+UG9saWN5PC9oMj48YnV0dG9uIGNsYXNzPSJjbG9zZSIgaWQ9ImNsb3NlTW9kYWwiIGFyaWEtbGFiZWw9IkNsb3NlIj7DlzwvYnV0dG9uPjwvZGl2PjxkaXYgaWQ9InBvbGljeUNvbnRlbnQiPjwvZGl2PjwvZGl2Pgo8L2Rpdj4KPHNjcmlwdD4KY29uc3QgJCA9IGlkID0+IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKGlkKTsKY29uc3QgU1RPUkFHRV9LRVkgPSAiZmFybWRpcmVjdF9jdXN0b21lcl9hY2NvdW50c192MSI7CmNvbnN0IFNFU1NJT05fS0VZID0gImZhcm1kaXJlY3RfY3VzdG9tZXJfc2Vzc2lvbl92MSI7CmZ1bmN0aW9uIGdldEFjY291bnRzKCl7dHJ5e3JldHVybiBKU09OLnBhcnNlKGxvY2FsU3RvcmFnZS5nZXRJdGVtKFNUT1JBR0VfS0VZKXx8IltdIil9Y2F0Y2h7cmV0dXJuIFtdfX0KZnVuY3Rpb24gc2V0TWVzc2FnZShpZCx0ZXh0LHR5cGUpe2NvbnN0IGVsPSQoaWQpO2VsLnRleHRDb250ZW50PXRleHQ7ZWwuY2xhc3NOYW1lPSJtZXNzYWdlICIrdHlwZX0KZnVuY3Rpb24gc3dpdGNoVGFiKHRhYil7CiAgY29uc3QgaXNSZWdpc3Rlcj10YWI9PT0icmVnaXN0ZXIiOwogICQoInJlZ2lzdGVyRm9ybSIpLmNsYXNzTGlzdC50b2dnbGUoImhpZGRlbiIsIWlzUmVnaXN0ZXIpOwogICQoImxvZ2luRm9ybSIpLmNsYXNzTGlzdC50b2dnbGUoImhpZGRlbiIsaXNSZWdpc3Rlcik7CiAgJCgicmVnaXN0ZXJUYWIiKS5jbGFzc0xpc3QudG9nZ2xlKCJhY3RpdmUiLGlzUmVnaXN0ZXIpOwogICQoImxvZ2luVGFiIikuY2xhc3NMaXN0LnRvZ2dsZSgiYWN0aXZlIiwhaXNSZWdpc3Rlcik7Cn0KJCgicmVnaXN0ZXJUYWIiKS5hZGRFdmVudExpc3RlbmVyKCJjbGljayIsKCk9PnN3aXRjaFRhYigicmVnaXN0ZXIiKSk7CiQoImxvZ2luVGFiIikuYWRkRXZlbnRMaXN0ZW5lcigiY2xpY2siLCgpPT5zd2l0Y2hUYWIoImxvZ2luIikpOwpmdW5jdGlvbiBtYWtlVWlkKCl7cmV0dXJuICJGRC0iK0RhdGUubm93KCkudG9TdHJpbmcoMzYpLnRvVXBwZXJDYXNlKCkrIi0iK2NyeXB0by5nZXRSYW5kb21WYWx1ZXMobmV3IFVpbnQzMkFycmF5KDEpKVswXS50b1N0cmluZygzNikudG9VcHBlckNhc2UoKS5zbGljZSgwLDYpfQphc3luYyBmdW5jdGlvbiBoYXNoUGFzc3dvcmQocGFzc3dvcmQpewogIGlmKCFjcnlwdG8uc3VidGxlKSB0aHJvdyBuZXcgRXJyb3IoIlNlY3VyZSBwYXNzd29yZCBoYXNoaW5nIGlzIG5vdCBhdmFpbGFibGUgaW4gdGhpcyBicm93c2VyLiBPcGVuIHRoaXMgcGFnZSBvbiBsb2NhbGhvc3Qgb3IgSFRUUFMuIik7CiAgY29uc3QgYnl0ZXM9bmV3IFRleHRFbmNvZGVyKCkuZW5jb2RlKHBhc3N3b3JkKTsKICBjb25zdCBkaWdlc3Q9YXdhaXQgY3J5cHRvLnN1YnRsZS5kaWdlc3QoIlNIQS0yNTYiLGJ5dGVzKTsKICByZXR1cm4gQXJyYXkuZnJvbShuZXcgVWludDhBcnJheShkaWdlc3QpKS5tYXAoYj0+Yi50b1N0cmluZygxNikucGFkU3RhcnQoMiwiMCIpKS5qb2luKCIiKTsKfQokKCJyZWdpc3RlckZvcm0iKS5hZGRFdmVudExpc3RlbmVyKCJzdWJtaXQiLGFzeW5jIGU9PnsKICBlLnByZXZlbnREZWZhdWx0KCk7c2V0TWVzc2FnZSgicmVnaXN0ZXJNZXNzYWdlIiwiIiwiIik7CiAgY29uc3QgdXNlcm5hbWU9JCgidXNlcm5hbWUiKS52YWx1ZS50cmltKCk7CiAgY29uc3QgZW1haWw9JCgiZW1haWwiKS52YWx1ZS50cmltKCkudG9Mb3dlckNhc2UoKTsKICBjb25zdCBhY2NvdW50cz1nZXRBY2NvdW50cygpOwogIGlmKGFjY291bnRzLnNvbWUoYT0+YS51c2VybmFtZS50b0xvd2VyQ2FzZSgpPT09dXNlcm5hbWUudG9Mb3dlckNhc2UoKSkpe3NldE1lc3NhZ2UoInJlZ2lzdGVyTWVzc2FnZSIsIlRoYXQgdXNlcm5hbWUgaXMgYWxyZWFkeSByZWdpc3RlcmVkIGluIHRoaXMgYnJvd3Nlci4iLCJlcnJvciIpO3JldHVybn0KICBpZihhY2NvdW50cy5zb21lKGE9PmEuZW1haWw9PT1lbWFpbCkpe3NldE1lc3NhZ2UoInJlZ2lzdGVyTWVzc2FnZSIsIlRoYXQgZW1haWwgYWRkcmVzcyBpcyBhbHJlYWR5IHJlZ2lzdGVyZWQgaW4gdGhpcyBicm93c2VyLiIsImVycm9yIik7cmV0dXJufQogIGNvbnN0IGJ1dHRvbj0kKCJyZWdpc3RlckZvcm0iKS5xdWVyeVNlbGVjdG9yKCJidXR0b25bdHlwZT1zdWJtaXRdIik7YnV0dG9uLmRpc2FibGVkPXRydWU7YnV0dG9uLnRleHRDb250ZW50PSJSZWdpc3RlcmluZ+KApiI7CiAgdHJ5ewogICAgY29uc3QgcGFzc3dvcmRIYXNoPWF3YWl0IGhhc2hQYXNzd29yZCgkKCJwYXNzd29yZCIpLnZhbHVlKTsKICAgIGNvbnN0IHVzZXI9e3VpZDptYWtlVWlkKCksbmFtZTokKCJuYW1lIikudmFsdWUudHJpbSgpLGVtYWlsLGFkZHJlc3M6JCgiYWRkcmVzcyIpLnZhbHVlLnRyaW0oKSxwaW46JCgicGluIikudmFsdWUudHJpbSgpLHN0YXRlOiQoInN0YXRlIikudmFsdWUsdXNlcm5hbWUscGFzc3dvcmRIYXNoLGNyZWF0ZWRBdDpuZXcgRGF0ZSgpLnRvSVNPU3RyaW5nKCl9OwogICAgYWNjb3VudHMucHVzaCh1c2VyKTtsb2NhbFN0b3JhZ2Uuc2V0SXRlbShTVE9SQUdFX0tFWSxKU09OLnN0cmluZ2lmeShhY2NvdW50cykpOwogICAgJCgicmVnaXN0ZXJGb3JtIikucmVzZXQoKTsKICAgIHNldE1lc3NhZ2UoInJlZ2lzdGVyTWVzc2FnZSIsIlJlZ2lzdHJhdGlvbiBzdWNjZXNzZnVsISBZb3VyIGN1c3RvbWVyIFVJRCBpcyAiK3VzZXIudWlkKyIuIFlvdSBjYW4gbm93IGxvZyBpbiB1c2luZyB5b3VyIHVzZXJuYW1lIGFuZCBwYXNzd29yZC4iLCJzdWNjZXNzIik7CiAgICAkKCJsb2dpblVzZXJuYW1lIikudmFsdWU9dXNlcm5hbWU7c3dpdGNoVGFiKCJsb2dpbiIpOwogIH1jYXRjaChlcnIpe3NldE1lc3NhZ2UoInJlZ2lzdGVyTWVzc2FnZSIsZXJyLm1lc3NhZ2V8fCJDb3VsZCBub3Qgc2F2ZSB5b3VyIGFjY291bnQgaW4gdGhpcyBicm93c2VyLiIsImVycm9yIil9CiAgZmluYWxseXtidXR0b24uZGlzYWJsZWQ9ZmFsc2U7YnV0dG9uLnRleHRDb250ZW50PSJSZWdpc3RlciBhY2NvdW50In0KfSk7CiQoImxvZ2luRm9ybSIpLmFkZEV2ZW50TGlzdGVuZXIoInN1Ym1pdCIsYXN5bmMgZT0+ewogIGUucHJldmVudERlZmF1bHQoKTtzZXRNZXNzYWdlKCJsb2dpbk1lc3NhZ2UiLCIiLCIiKTsKICB0cnl7CiAgICBjb25zdCB1c2VybmFtZT0kKCJsb2dpblVzZXJuYW1lIikudmFsdWUudHJpbSgpOwogICAgY29uc3QgaGFzaD1hd2FpdCBoYXNoUGFzc3dvcmQoJCgibG9naW5QYXNzd29yZCIpLnZhbHVlKTsKICAgIGNvbnN0IHVzZXI9Z2V0QWNjb3VudHMoKS5maW5kKGE9PmEudXNlcm5hbWUudG9Mb3dlckNhc2UoKT09PXVzZXJuYW1lLnRvTG93ZXJDYXNlKCkmJmEucGFzc3dvcmRIYXNoPT09aGFzaCk7CiAgICBpZighdXNlcil7c2V0TWVzc2FnZSgibG9naW5NZXNzYWdlIiwiVXNlcm5hbWUgb3IgcGFzc3dvcmQgaXMgaW5jb3JyZWN0LCBvciB0aGUgYWNjb3VudCBpcyBub3Qgc2F2ZWQgaW4gdGhpcyBicm93c2VyLiIsImVycm9yIik7cmV0dXJufQogICAgY29uc3Qgc2Vzc2lvbj17dWlkOnVzZXIudWlkLHVzZXJuYW1lOnVzZXIudXNlcm5hbWUsbG9nZ2VkSW5BdDpuZXcgRGF0ZSgpLnRvSVNPU3RyaW5nKCl9OwogICAgc2Vzc2lvblN0b3JhZ2Uuc2V0SXRlbShTRVNTSU9OX0tFWSxKU09OLnN0cmluZ2lmeShzZXNzaW9uKSk7CiAgICBzZXRNZXNzYWdlKCJsb2dpbk1lc3NhZ2UiLCJMb2dpbiBzdWNjZXNzZnVsLiBXZWxjb21lLCAiK3VzZXIubmFtZSsiISBZb3VyIFVJRCBpcyAiK3VzZXIudWlkKyIuIiwic3VjY2VzcyIpOwogIH1jYXRjaChlcnIpe3NldE1lc3NhZ2UoImxvZ2luTWVzc2FnZSIsZXJyLm1lc3NhZ2V8fCJMb2dpbiBjb3VsZCBub3QgYmUgY29tcGxldGVkLiIsImVycm9yIil9Cn0pOwpjb25zdCBwb2xpY2llcz17CnRlcm1zOnt0aXRsZToiVGVybXMgJiBDb25kaXRpb25zIixodG1sOmA8aDM+MS4gVXNpbmcgRmFybURpcmVjdDwvaDM+PHA+RmFybURpcmVjdCBpcyBhIHBsYXRmb3JtIGNvbmNlcHQgaW50ZW5kZWQgdG8gaGVscCBjdXN0b21lcnMgZGlzY292ZXIgYW5kIHB1cmNoYXNlIHByb2R1Y2UgZGlyZWN0bHkgZnJvbSBmYXJtZXJzLiBCeSBjcmVhdGluZyBhbiBhY2NvdW50LCB5b3UgYWdyZWUgdG8gdXNlIHRoZSBzZXJ2aWNlIGxhd2Z1bGx5IGFuZCBwcm92aWRlIGFjY3VyYXRlIGluZm9ybWF0aW9uLjwvcD48aDM+Mi4gQWNjb3VudCByZXNwb25zaWJpbGl0eTwvaDM+PHA+S2VlcCB5b3VyIHVzZXJuYW1lIGFuZCBwYXNzd29yZCBwcml2YXRlLiBZb3UgYXJlIHJlc3BvbnNpYmxlIGZvciBhY3Rpdml0eSBjYXJyaWVkIG91dCB1c2luZyB5b3VyIGFjY291bnQgb24gdGhpcyBkZXZpY2UuIENvbnRhY3QgdGhlIHNpdGUgb3BlcmF0b3IgaWYgeW91IGJlbGlldmUgeW91ciBhY2NvdW50IGhhcyBiZWVuIG1pc3VzZWQuPC9wPjxoMz4zLiBPcmRlcnMsIHByaWNlcyBhbmQgYXZhaWxhYmlsaXR5PC9oMz48cD5Qcm9kdWN0IHByaWNlcywgcXVhbnRpdGllcywgZGVsaXZlcnkgYXJlYXMgYW5kIGF2YWlsYWJpbGl0eSBtYXkgY2hhbmdlLiBBbiBvcmRlciBpcyBjb25maXJtZWQgb25seSB3aGVuIHRoZSB3ZWJzaXRlIG9yIHNlbGxlciBjbGVhcmx5IGNvbmZpcm1zIGl0LiBQcm9kdWN0IGltYWdlcyBhbmQgZGVzY3JpcHRpb25zIGFyZSBpbGx1c3RyYXRpdmUgd2hlcmUgc3RhdGVkLjwvcD48aDM+NC4gRGVsaXZlcnkgYW5kIHJldHVybnM8L2gzPjxwPkRlbGl2ZXJ5IHRpbWVsaW5lcyBkZXBlbmQgb24gbG9jYXRpb24sIHdlYXRoZXIsIGhhcnZlc3QgYW5kIHNlbGxlciBhdmFpbGFiaWxpdHkuIEFueSBjYW5jZWxsYXRpb24sIHJlZnVuZCwgcmVwbGFjZW1lbnQgb3IgcmV0dXJuIHJlcXVlc3Qgd2lsbCBiZSBoYW5kbGVkIGFjY29yZGluZyB0byB0aGUgcG9saWN5IHNob3duIGF0IHRoZSB0aW1lIG9mIHB1cmNoYXNlIGFuZCBhcHBsaWNhYmxlIGNvbnN1bWVyIGxhdy48L3A+PGgzPjUuIEFjY2VwdGFibGUgdXNlPC9oMz48cD5EbyBub3Qgc3VibWl0IGZhbHNlIGluZm9ybWF0aW9uLCBpbnRlcmZlcmUgd2l0aCB0aGUgd2Vic2l0ZSwgYXR0ZW1wdCB1bmF1dGhvcml6ZWQgYWNjZXNzLCBvciBtaXN1c2UgYW5vdGhlciBwZXJzb24ncyBhY2NvdW50LjwvcD48aDM+Ni4gQ2hhbmdlcyBhbmQgY29udGFjdDwvaDM+PHA+VGhlc2UgdGVybXMgbWF5IGJlIHVwZGF0ZWQgYXMgdGhlIHNlcnZpY2UgZGV2ZWxvcHMuIFRoZSBvcGVyYXRvciBzaG91bGQgcHVibGlzaCBhIGNvbnRhY3QgZW1haWwgYW5kIGJ1c2luZXNzIGFkZHJlc3MgYmVmb3JlIGxhdW5jaGluZyBhIGxpdmUgc3RvcmUuIFRoaXMgc2FtcGxlIHBvbGljeSBpcyBub3QgbGVnYWwgYWR2aWNlLjwvcD5gfSwKcHJpdmFjeTp7dGl0bGU6IlByaXZhY3kgUG9saWN5IixodG1sOmA8aDM+MS4gSW5mb3JtYXRpb24gY29sbGVjdGVkPC9oMz48cD5UaGlzIGRlbW8gcmVnaXN0cmF0aW9uIGZvcm0gY29sbGVjdHMgeW91ciBuYW1lLCBlbWFpbCBhZGRyZXNzLCBkZWxpdmVyeSBhZGRyZXNzLCBQSU4gY29kZSwgc3RhdGUsIHVzZXJuYW1lIGFuZCBhIHBhc3N3b3JkIGhhc2guIEl0IGdlbmVyYXRlcyBhIGN1c3RvbWVyIFVJRC48L3A+PGgzPjIuIFdoZXJlIGluZm9ybWF0aW9uIGlzIHN0b3JlZDwvaDM+PHA+SW4gdGhpcyBkZW1vLCByZWdpc3RyYXRpb24gZGF0YSBpcyBzdG9yZWQgaW4geW91ciBicm93c2VyJ3MgbG9jYWwgc3RvcmFnZSBvbiB0aGUgZGV2aWNlIGFuZCBicm93c2VyIHByb2ZpbGUgdXNlZCB0byByZWdpc3Rlci4gSXQgaXMgbm90IHNlbnQgdG8gYSBzZXJ2ZXIgYnkgdGhpcyBwYWdlLjwvcD48aDM+My4gUGFzc3dvcmQgaGFuZGxpbmc8L2gzPjxwPlRoZSBwYWdlIHN0b3JlcyBhIFNIQS0yNTYgcGFzc3dvcmQgaGFzaCByYXRoZXIgdGhhbiB0aGUgcGxhaW4tdGV4dCBwYXNzd29yZC4gQnJvd3Nlci1vbmx5IGhhc2hpbmcgaXMgbm90IGEgc3Vic3RpdHV0ZSBmb3Igc2VjdXJlIHNlcnZlci1zaWRlIGF1dGhlbnRpY2F0aW9uIGFuZCBzaG91bGQgbm90IGJlIHVzZWQgZm9yIGEgcmVhbCBlLWNvbW1lcmNlIHNlcnZpY2UuPC9wPjxoMz40LiBZb3VyIGNob2ljZXM8L2gzPjxwPllvdSBjYW4gY2xlYXIgdGhpcyBkZW1vJ3Mgc2F2ZWQgYWNjb3VudCBkYXRhIGJ5IGNsZWFyaW5nIHRoaXMgc2l0ZSdzIGJyb3dzZXIgc3RvcmFnZS4gRG9pbmcgc28gbWF5IHBlcm1hbmVudGx5IHJlbW92ZSB5b3VyIGxvY2FsbHkgc2F2ZWQgYWNjb3VudC48L3A+PGgzPjUuIFNoYXJpbmcgYW5kIHNlY3VyaXR5PC9oMz48cD5UaGlzIGRlbW8gZG9lcyBub3QgdHJhbnNtaXQgeW91ciBkZXRhaWxzIHRvIHRoZSBzaXRlIG93bmVyLiBBbnlvbmUgd2l0aCBhY2Nlc3MgdG8geW91ciB1bmxvY2tlZCBicm93c2VyIHByb2ZpbGUgb3IgZGV2ZWxvcGVyIHRvb2xzIG1heSBiZSBhYmxlIHRvIGluc3BlY3QgbG9jYWxseSBzdG9yZWQgZGF0YS4gRG8gbm90IHVzZSByZWFsIHNlbnNpdGl2ZSBpbmZvcm1hdGlvbiBpbiBhIHB1YmxpYyBkZW1vLjwvcD48aDM+Ni4gTGl2ZSB3ZWJzaXRlIG5vdGljZTwvaDM+PHA+QmVmb3JlIHB1YmxpYyBsYXVuY2gsIHJlcGxhY2UgdGhpcyBzYW1wbGUgd2l0aCBhIHBvbGljeSB0aGF0IGlkZW50aWZpZXMgdGhlIGFjdHVhbCBidXNpbmVzcywgZGF0YSBjb250cm9sbGVyLCBwdXJwb3NlcywgbGVnYWwgYmFzaXMsIHJldGVudGlvbiBwZXJpb2RzLCBwcm9jZXNzb3JzLCB1c2VyIHJpZ2h0cyBhbmQgY29udGFjdCBkZXRhaWxzLCBhbmQgY29tcGxpZXMgd2l0aCBhcHBsaWNhYmxlIEluZGlhbiBwcml2YWN5IGFuZCBjb25zdW1lciBsYXdzLjwvcD5gfSwKY29va2llczp7dGl0bGU6IkNvb2tpZSAmIExvY2FsIFN0b3JhZ2UgUG9saWN5IixodG1sOmA8aDM+QnJvd3NlciBzdG9yYWdlPC9oMz48cD5UaGlzIGRlbW8gdXNlcyBicm93c2VyIGxvY2FsIHN0b3JhZ2UgdG8gc2F2ZSB5b3VyIHJlZ2lzdGVyZWQgcHJvZmlsZSBhbmQgc2Vzc2lvbiBzdG9yYWdlIHRvIGtlZXAgYSB0ZW1wb3JhcnkgbG9naW4gc2Vzc2lvbi4gSXQgZG9lcyBub3Qgc2V0IGFkdmVydGlzaW5nIGNvb2tpZXMgb3IgdXNlIHRoaXJkLXBhcnR5IHRyYWNraW5nIGNvb2tpZXMuPC9wPjxoMz5NYW5hZ2luZyBzdG9yYWdlPC9oMz48cD5DbGVhcmluZyBicm93c2VyIHNpdGUgZGF0YSwgdXNpbmcgcHJpdmF0ZSBicm93c2luZywgY2hhbmdpbmcgYnJvd3NlciBwcm9maWxlcyBvciBzd2l0Y2hpbmcgZGV2aWNlcyBtYXkgcmVtb3ZlIG9yIG1ha2UgdGhlIHNhdmVkIGFjY291bnQgdW5hdmFpbGFibGUuIEEgbGl2ZSBzaXRlIG1heSB1c2UgZXNzZW50aWFsIGNvb2tpZXMgZm9yIHNlY3VyZSBzaWduLWluIGFuZCBjaGVja291dCwgd2l0aCBhcHByb3ByaWF0ZSBub3RpY2UgYW5kIGNvbnRyb2xzLjwvcD5gfQp9OwpmdW5jdGlvbiBvcGVuUG9saWN5KGtleSl7Y29uc3QgcD1wb2xpY2llc1trZXldOyQoInBvbGljeVRpdGxlIikudGV4dENvbnRlbnQ9cC50aXRsZTskKCJwb2xpY3lDb250ZW50IikuaW5uZXJIVE1MPXAuaHRtbDskKCJwb2xpY3lNb2RhbCIpLmNsYXNzTGlzdC5hZGQoIm9wZW4iKX0KZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbCgiW2RhdGEtcG9saWN5XSIpLmZvckVhY2goYT0+YS5hZGRFdmVudExpc3RlbmVyKCJjbGljayIsKCk9Pm9wZW5Qb2xpY3koYS5kYXRhc2V0LnBvbGljeSkpKTsKJCgiY2xvc2VNb2RhbCIpLmFkZEV2ZW50TGlzdGVuZXIoImNsaWNrIiwoKT0+JCgicG9saWN5TW9kYWwiKS5jbGFzc0xpc3QucmVtb3ZlKCJvcGVuIikpOwokKCJwb2xpY3lNb2RhbCIpLmFkZEV2ZW50TGlzdGVuZXIoImNsaWNrIixlPT57aWYoZS50YXJnZXQ9PT0kKCJwb2xpY3lNb2RhbCIpKSQoInBvbGljeU1vZGFsIikuY2xhc3NMaXN0LnJlbW92ZSgib3BlbiIpfSk7CmRvY3VtZW50LmFkZEV2ZW50TGlzdGVuZXIoImtleWRvd24iLGU9PntpZihlLmtleT09PSJFc2NhcGUiKSQoInBvbGljeU1vZGFsIikuY2xhc3NMaXN0LnJlbW92ZSgib3BlbiIpfSk7Cjwvc2NyaXB0Pgo8L2JvZHk+CjwvaHRtbD4=';
+      const overlay = document.getElementById('fdAccountOverlay');
+      const frame = document.getElementById('fdAccountFrame');
+      const openLink = document.getElementById('customerAccountLink');
+      function openAccount(event){ if(event) event.preventDefault(); if(!frame.srcdoc){ const bytes=Uint8Array.from(atob(accountCodeBase64),c=>c.charCodeAt(0)); frame.srcdoc=new TextDecoder().decode(bytes); } overlay.classList.add('open'); }
+      function closeAccount(){ overlay.classList.remove('open'); }
+      openLink.addEventListener('click',openAccount);
+      document.getElementById('fdAccountClose').addEventListener('click',closeAccount);
+      overlay.addEventListener('click',e=>{if(e.target===overlay) closeAccount();});
+      document.addEventListener('keydown',e=>{if(e.key==='Escape' && overlay.classList.contains('open')) closeAccount();});
+    })();
+  </script>
+
+</body>
+</html>
